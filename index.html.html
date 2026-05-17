@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Megan's Ritual">
+<title>Megan's Daily Ritual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08060F;
+  --bg2:#110D1C;
+  --card:rgba(255,255,255,0.04);
+  --card-hover:rgba(255,255,255,0.07);
+  --card-done:rgba(180,145,70,0.10);
+  --gold:#C9A84C;
+  --gold-dim:rgba(201,168,76,0.22);
+  --rose:#C46278;
+  --rose-dim:rgba(196,98,120,0.25);
+  --text:#ECE6D4;
+  --text2:#8C859E;
+  --border:rgba(201,168,76,0.2);
+  --border-done:rgba(201,168,76,0.45);
+  --success:#7EAF7A;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Lora',Georgia,serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+
+/* STARS */
+#stars-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+/* SCREENS */
+.screen{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+.screen.hidden{display:none;}
+
+/* ===== HOME ===== */
+#home{align-items:center;justify-content:center;text-align:center;padding:48px 24px 60px;gap:0;}
+
+.home-date{
+  position:absolute;top:24px;left:0;right:0;
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.18em;
+  color:var(--text2);text-transform:uppercase;
+}
+.crest{font-size:52px;margin-bottom:28px;animation:float 5s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+.home-welcome{
+  font-family:'Cinzel',serif;font-size:11px;font-weight:500;
+  letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;
+}
+.home-name{
+  font-family:'Cinzel',serif;font-size:38px;font-weight:700;
+  color:var(--text);line-height:1.1;margin-bottom:6px;
+}
+.home-tagline{font-size:15px;color:var(--text2);font-style:italic;margin-bottom:36px;}
+
+.streak-row{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 22px;border:1px solid var(--border);border-radius:99px;
+  background:var(--card);margin-bottom:36px;
+}
+.streak-flame{font-size:18px;}
+.streak-num{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);}
+.streak-lbl{font-size:12px;color:var(--text2);}
+
+.quote-wrap{
+  max-width:300px;margin:0 auto 44px;
+  padding:16px 20px;border-left:2px solid var(--gold);
+  background:var(--card);border-radius:0 12px 12px 0;text-align:left;
+}
+.quote-text{font-size:13px;font-style:italic;color:var(--text2);line-height:1.75;margin-bottom:6px;}
+.quote-src{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:0.1em;}
+
+.start-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 42px;
+  background:linear-gradient(135deg,#7A1A38,#C9A84C 130%);
+  color:#F5EDD6;font-family:'Cinzel',serif;font-size:13px;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;
+  border:none;border-radius:99px;cursor:pointer;
+  transition:transform 0.3s,box-shadow 0.3s;
+  box-shadow:0 4px 30px rgba(122,26,56,0.45);
+}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(122,26,56,0.55);}
+.start-btn:active{transform:translateY(-1px);}
+
+/* ===== ROUTINE ===== */
+#routine{padding:0;}
+
+.routine-top{
+  padding:44px 20px 18px;text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(122,26,56,0.18) 0%,transparent 100%);
+  position:relative;
+}
+.back-btn{
+  position:absolute;top:18px;left:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:99px;
+  padding:6px 14px;font-family:'Cinzel',serif;font-size:10px;
+  letter-spacing:0.1em;color:var(--text2);cursor:pointer;transition:all 0.2s;
+}
+.back-btn:hover{color:var(--gold);border-color:var(--gold);}
+.routine-title{font-family:'Cinzel',serif;font-size:19px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.routine-sub{font-size:11px;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:0.12em;}
+
+/* week strip */
+.week-strip{display:flex;gap:5px;padding:12px 14px 0;overflow-x:auto;scrollbar-width:none;}
+.week-strip::-webkit-scrollbar{display:none;}
+.wd{flex:1;min-width:38px;text-align:center;padding:7px 3px;border:1px solid var(--border);border-radius:9px;background:var(--card);}
+.wd.today{border-color:rgba(201,168,76,0.6);background:rgba(201,168,76,0.07);}
+.wd.wdone{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);}
+.wd-l{font-size:9px;font-family:'Cinzel',serif;color:var(--text2);display:block;margin-bottom:3px;letter-spacing:0.07em;}
+.wd-n{font-size:12px;font-family:'Cinzel',serif;color:var(--text);display:block;}
+.wd-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin:3px auto 0;}
+.wd.today .wd-l,.wd.today .wd-n{color:var(--gold);}
+.wd.wdone .wd-l,.wd.wdone .wd-n{color:var(--gold);}
+
+/* progress */
+.prog-wrap{padding:14px 16px;}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:7px;}
+.prog-lbl{font-size:10px;font-family:'Cinzel',serif;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
+.prog-ct{font-size:10px;font-family:'Cinzel',serif;color:var(--gold);}
+.prog-track{height:3px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#7A1A38,#C9A84C);border-radius:99px;transition:width 0.5s ease;}
+
+/* complete banner */
+.complete-banner{
+  margin:4px 14px 6px;padding:16px 18px;
+  background:linear-gradient(135deg,rgba(122,26,56,0.3),rgba(201,168,76,0.15));
+  border:1px solid var(--gold);border-radius:15px;text-align:center;
+}
+.complete-banner h3{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);margin-bottom:4px;}
+.complete-banner p{font-size:12px;color:var(--text2);font-style:italic;}
+
+/* steps */
+.steps-list{padding:8px 14px 4px;}
+
+.step-card{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:14px 14px;background:var(--card);
+  border:1px solid var(--border);border-radius:15px;
+  margin-bottom:9px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;
+}
+.step-card::before{
+  content:'';position:absolute;inset:0;opacity:0;
+  background:radial-gradient(circle at 50% -20%,rgba(201,168,76,0.1),transparent 70%);
+  transition:opacity 0.3s;
+}
+.step-card:hover:not(.done)::before{opacity:1;}
+.step-card:hover:not(.done){border-color:rgba(201,168,76,0.35);}
+.step-card.done{background:var(--card-done);border-color:var(--border-done);}
+.step-card.workout-type{cursor:default;}
+
+.step-icon{
+  font-size:22px;width:42px;height:42px;display:flex;align-items:center;
+  justify-content:center;background:rgba(255,255,255,0.05);
+  border-radius:11px;flex-shrink:0;transition:background 0.2s;
+}
+.step-card.done .step-icon{background:rgba(201,168,76,0.12);}
+
+.step-body{flex:1;min-width:0;}
+.step-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.step-card.done .step-name{color:var(--gold);}
+.step-note{font-size:12px;color:var(--text2);font-style:italic;}
+.step-card.done .step-note{color:rgba(201,168,76,0.6);}
+
+.check-ring{
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.15);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;margin-top:10px;transition:all 0.25s;color:transparent;
+}
+.step-card.done .check-ring{background:var(--gold);border-color:var(--gold);color:#08060F;}
+
+.del-btn{
+  position:absolute;top:8px;right:8px;width:22px;height:22px;
+  border-radius:50%;background:transparent;border:none;
+  color:var(--text2);font-size:16px;line-height:1;cursor:pointer;
+  opacity:0;transition:opacity 0.2s,background 0.15s;display:flex;
+  align-items:center;justify-content:center;
+}
+.step-card:hover .del-btn{opacity:1;}
+.del-btn:hover{background:rgba(255,80,80,0.15);color:#FF7070;}
+
+/* Workout expanded */
+.workout-expand{margin-top:13px;padding-top:13px;border-top:1px solid var(--border);}
+.day-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px;}
+.day-pill{
+  padding:5px 12px;border-radius:99px;border:1px solid var(--border);
+  background:transparent;font-size:10px;font-family:'Cinzel',serif;
+  color:var(--text2);cursor:pointer;letter-spacing:0.06em;transition:all 0.2s;
+}
+.day-pill.active{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold);}
+.day-pill:hover:not(.active){border-color:rgba(201,168,76,0.35);color:var(--text);}
+.workout-focus{
+  font-size:10px;font-family:'Cinzel',serif;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text2);margin-bottom:11px;
+}
+.yt-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px;background:#CC0000;color:#fff;border:none;
+  border-radius:9px;font-size:13px;font-family:'Lora',serif;cursor:pointer;
+  text-decoration:none;transition:opacity 0.15s;font-weight:500;
+}
+.yt-btn:hover{opacity:0.88;}
+.mark-wo-btn{
+  width:100%;margin-top:7px;padding:9px;background:transparent;
+  border:1px solid var(--border);border-radius:9px;
+  font-family:'Cinzel',serif;font-size:10px;color:var(--text2);
+  cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;
+}
+.mark-wo-btn:hover{border-color:var(--gold);color:var(--gold);}
+.mark-wo-btn.done{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
+
+/* Add section */
+.add-zone{padding:4px 14px 28px;}
+.add-toggle-btn{
+  width:100%;padding:12px;background:transparent;
+  border:1px dashed rgba(201,168,76,0.25);border-radius:13px;
+  color:var(--text2);font-family:'Cinzel',serif;font-size:11px;
+  letter-spacing:0.12em;cursor:pointer;transition:all 0.2s;
+}
+.add-toggle-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+.add-form{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:14px;padding:14px;margin-top:8px;
+  display:none;
+}
+.add-form.open{display:block;}
+.add-form-title{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.12em;
+  color:var(--text2);margin-bottom:10px;text-transform:uppercase;
+}
+.add-input{
+  width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;color:var(--text);
+  font-family:'Lora',serif;font-size:14px;margin-bottom:10px;
+  outline:none;transition:border-color 0.2s;
+}
+.add-input:focus{border-color:var(--gold);}
+.add-input::placeholder{color:var(--text2);}
+.emoji-label{font-size:10px;font-family:'Cinzel',serif;color:var(--text2);letter-spacing:0.1em;margin-bottom:8px;display:block;}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.emoji-opt{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;border:1px solid var(--border);font-size:17px;
+  cursor:pointer;transition:all 0.15s;
+}
+.emoji-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.12);}
+.emoji-opt:hover:not(.sel){border-color:rgba(201,168,76,0.35);}
+.form-row{display:flex;gap:8px;}
+.form-btn{
+  flex:1;padding:9px;border-radius:8px;border:1px solid var(--border);
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;
+}
+.form-btn.save{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold);}
+.form-btn.save:hover{background:rgba(201,168,76,0.22);}
+.form-btn.cancel{background:transparent;color:var(--text2);}
+.form-btn.cancel:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+
+/* divider */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 14px 10px;
+}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-star{font-size:11px;color:var(--gold);opacity:0.6;}
+
+/* reset note */
+.reset-row{padding:0 14px 6px;display:flex;justify-content:flex-end;}
+.reset-link{font-size:10px;color:var(--text2);cursor:pointer;font-family:'Cinzel',serif;letter-spacing:0.06em;border:none;background:none;transition:color 0.2s;}
+.reset-link:hover{color:var(--rose);}
+
+/* scrollbar */
+#routine::-webkit-scrollbar{width:3px;}
+#routine::-webkit-scrollbar-track{background:transparent;}
+#routine::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- HOME SCREEN -->
+<div id="home" class="screen">
+  <div class="home-date" id="home-date"></div>
+  <div class="crest">🌙</div>
+  <div class="home-welcome">Welcome back</div>
+  <div class="home-name">Megan</div>
+  <div class="home-tagline" id="home-tagline">Good morning</div>
+
+  <div class="streak-row">
+    <span class="streak-flame">🔥</span>
+    <span class="streak-num" id="streak-num">0</span>
+    <span class="streak-lbl">day streak</span>
+  </div>
+
+  <div class="quote-wrap">
+    <div class="quote-text" id="quote-text"></div>
+    <div class="quote-src" id="quote-src"></div>
+  </div>
+
+  <button class="start-btn" onclick="openRoutine()">✦ Begin Your Ritual</button>
+</div>
+
+<!-- ROUTINE SCREEN -->
+<div id="routine" class="screen hidden">
+  <div class="routine-top">
+    <button class="back-btn" onclick="openHome()">← Home</button>
+    <div class="routine-title" id="routine-title">Morning Ritual</div>
+    <div class="routine-sub" id="routine-sub"></div>
+  </div>
+
+  <div class="week-strip" id="week-strip"></div>
+
+  <div class="prog-wrap">
+    <div class="prog-hd">
+      <span class="prog-lbl">Today's progress</span>
+      <span class="prog-ct" id="prog-ct">0 / 0</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="complete-banner" style="display:none">
+    <div class="complete-banner">
+      <h3>✦ Ritual Complete ✦</h3>
+      <p>You are the storm, Megan. Extraordinary.</p>
+    </div>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-link" onclick="confirmReset()">↺ Reset today</button>
+  </div>
+
+  <div class="steps-list" id="steps-list"></div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-star">✦</div><div class="divider-line"></div></div>
+
+  <div class="add-zone">
+    <button class="add-toggle-btn" id="add-toggle" onclick="toggleAddForm()">+ Add a step to your ritual</button>
+    <div class="add-form" id="add-form">
+      <div class="add-form-title">New Step</div>
+      <input class="add-input" id="new-step-name" type="text" placeholder="Step name (e.g. Meditate, Journal…)" maxlength="40">
+      <span class="emoji-label">Choose an icon</span>
+      <div class="emoji-grid" id="emoji-grid"></div>
+      <div class="form-row">
+        <button class="form-btn cancel" onclick="closeAddForm()">Cancel</button>
+        <button class="form-btn save" onclick="saveNewStep()">Add Step</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STARS ──────────────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('stars-canvas');
+  const ctx=canvas.getContext('2d');
+  let stars=[];
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  function init(){
+    resize();stars=[];
+    const n=Math.floor((canvas.width*canvas.height)/6000);
+    for(let i=0;i<n;i++){
+      stars.push({
+        x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+        r:Math.random()*1.3+0.2,
+        a:Math.random(),da:(Math.random()*0.008+0.002)*(Math.random()<0.5?1:-1),
+        gold:Math.random()<0.08
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+      s.a+=s.da;if(s.a<=0||s.a>=1)s.da*=-1;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.gold?`rgba(201,168,76,${s.a})`:`rgba(255,255,255,${s.a*0.85})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',init);
+  init();draw();
+})();
+
+// ── DATA ───────────────────────────────────────────────────
+const QUOTES=[
+  {text:"To the stars who listen — and the dreams that are answered.",src:"A Court of Mist and Fury"},
+  {text:"You could rattle the stars. You could do anything, if only you dared.",src:"A Court of Thorns and Roses"},
+  {text:"The fire in her eyes burns brighter than any throne.",src:"House of the Dragon"},
+  {text:"She is the storm, and the calm. She is everything.",src:"ACOTAR"},
+  {text:"Daylight is for mortals. True power wakes at dusk.",src:"Night Court Proverb"},
+  {text:"A crown does not make a queen. Her will does.",src:"House of the Dragon"},
+  {text:"Some things require a willing heart. And she had the most willing heart of all.",src:"A Court of Silver Flames"},
+];
+
+const WORKOUT_DAYS=[
+  {id:1,label:"Day I",focus:"Upper body — push",url:"https://www.youtube.com/results?search_query=30+minute+upper+body+dumbbell+workout+women+strength"},
+  {id:2,label:"Day II",focus:"Lower body — glutes & quads",url:"https://www.youtube.com/results?search_query=30+minute+lower+body+glutes+legs+dumbbell+workout+women"},
+  {id:3,label:"Day III",focus:"Upper body — back & biceps",url:"https://www.youtube.com/results?search_query=30+minute+back+bicep+dumbbell+workout+women"},
+  {id:4,label:"Day IV",focus:"Lower body & core",url:"https://www.youtube.com/results?search_query=30+minute+legs+core+dumbbell+workout+women"},
+];
+
+const DEFAULT_STEPS=[
+  {id:"shower",icon:"🚿",name:"Shower",note:"Rise like the queen you are",locked:false},
+  {id:"teeth",icon:"✨",name:"Brush teeth & skincare",note:"Glow time",locked:false},
+  {id:"workout",icon:"⚔️",name:"Workout",note:"Today's training session",type:"workout",locked:false},
+  {id:"breakfast",icon:"🍳",name:"Breakfast",note:"Fuel for the realm",locked:false},
+];
+
+const EMOJIS=["🧘","📖","☕","🥗","💊","🌿","🎧","🛏","🏃","💧","🧴","🌅","📝","🧁","🍵","🎯","🌙","💅","🛁","🐉","🌸","🍓","🥤","🫖"];
+const DAY_LABELS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+// ── STATE ──────────────────────────────────────────────────
+let steps=[];
+let checked={};
+let workoutDay=0;
+let completedDates={};
+let selectedEmoji=EMOJIS[0];
+let addFormOpen=false;
+
+function getTodayKey(){return new Date().toISOString().split('T')[0];}
+
+function load(){
+  try{
+    const s=localStorage.getItem('megan_steps');
+    steps=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_STEPS));
+    const c=localStorage.getItem('megan_checked_'+getTodayKey());
+    checked=c?JSON.parse(c):{};
+    const wd=localStorage.getItem('megan_workout_day');
+    workoutDay=wd?parseInt(wd):0;
+    const cd=localStorage.getItem('megan_completed_dates');
+    completedDates=cd?JSON.parse(cd):{};
+  }catch(e){steps=JSON.parse(JSON.stringify(DEFAULT_STEPS));checked={};workoutDay=0;completedDates={};}
+}
+
+function save(){
+  localStorage.setItem('megan_steps',JSON.stringify(steps));
+  localStorage.setItem('megan_checked_'+getTodayKey(),JSON.stringify(checked));
+  localStorage.setItem('megan_workout_day',String(workoutDay));
+  localStorage.setItem('megan_completed_dates',JSON.stringify(completedDates));
+}
+
+// ── STREAK ─────────────────────────────────────────────────
+function calcStreak(){
+  let streak=0;
+  const d=new Date();
+  while(true){
+    const k=d.toISOString().split('T')[0];
+    if(completedDates[k]){streak++;}
+    else break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+
+// ── HOME ───────────────────────────────────────────────────
+function renderHome(){
+  const now=new Date();
+  const h=now.getHours();
+  let greeting='Good morning';
+  if(h>=12&&h<17)greeting='Good afternoon';
+  else if(h>=17)greeting='Good evening';
+  document.getElementById('home-tagline').textContent=greeting;
+  document.getElementById('home-date').textContent=
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('streak-num').textContent=calcStreak();
+  const q=QUOTES[Math.floor(now.getDate()*17+now.getMonth()*7)%QUOTES.length];
+  document.getElementById('quote-text').textContent='"'+q.text+'"';
+  document.getElementById('quote-src').textContent='— '+q.src;
+}
+
+function openHome(){
+  load();renderHome();
+  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('routine').classList.add('hidden');
+}
+
+// ── ROUTINE ────────────────────────────────────────────────
+function openRoutine(){
+  load();
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('routine').classList.remove('hidden');
+  renderRoutine();
+}
+
+function renderRoutine(){
+  const now=new Date();
+  document.getElementById('routine-sub').textContent=
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  renderWeekStrip();
+  renderProgress();
+  renderSteps();
+  renderEmojiGrid();
+}
+
+function renderWeekStrip(){
+  const today=new Date();
+  const todayDow=today.getDay();
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(today);d.setDate(today.getDate()-todayDow+i);
+    const k=d.toISOString().split('T')[0];
+    const isToday=i===todayDow,isDone=!!completedDates[k];
+    html+=`<div class="wd${isToday?' today':''}${isDone?' wdone':''}">
+      <span class="wd-l">${DAY_LABELS[i]}</span>
+      <span class="wd-n">${d.getDate()}</span>
+      ${isDone?'<div class="wd-dot"></div>':''}
+    </div>`;
+  }
+  document.getElementById('week-strip').innerHTML=html;
+}
+
+function renderProgress(){
+  const total=steps.length;
+  const done=steps.filter(s=>checked[s.id]).length;
+  const pct=total?Math.round((done/total)*100):0;
+  document.getElementById('prog-ct').textContent=done+' / '+total;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  const allDone=total>0&&done===total;
+  document.getElementById('complete-banner').style.display=allDone?'block':'none';
+  if(allDone){completedDates[getTodayKey()]=true;save();}
+}
+
+function renderSteps(){
+  const wo=WORKOUT_DAYS[workoutDay];
+  let html='';
+  steps.forEach((step,idx)=>{
+    const isDone=!!checked[step.id];
+    const isWo=step.type==='workout';
+    html+=`<div class="step-card${isDone?' done':''}${isWo?' workout-type':''}"
+      ${isWo?'':'onclick="toggleStep(\''+step.id+'\')"'}>
+      <div class="step-icon">${step.icon}</div>
+      <div class="step-body">
+        <div class="step-name">${step.name}</div>
+        <div class="step-note">${step.note||''}</div>
+        ${isWo?`
+        <div class="workout-expand">
+          <div class="day-pills">
+            ${WORKOUT_DAYS.map((d,i)=>`<button class="day-pill${i===workoutDay?' active':''}" onclick="setWorkoutDay(${i})">${d.label}</button>`).join('')}
+          </div>
+          <div class="workout-focus">${wo.focus}</div>
+          <a href="${wo.url}" target="_blank" class="yt-btn">▶ Find workout on YouTube</a>
+          <button class="mark-wo-btn${isDone?' done':''}" onclick="toggleStep('${step.id}')">
+            ${isDone?'✦ Workout complete — well done':'Mark workout as complete'}
+          </button>
+        </div>`:''}
+      </div>
+      ${!isWo?`<div class="check-ring">${isDone?'✓':''}</div>`:''}
+      <button class="del-btn" onclick="event.stopPropagation();removeStep('${step.id}')" title="Remove">×</button>
+    </div>`;
+  });
+  document.getElementById('steps-list').innerHTML=html;
+}
+
+function renderEmojiGrid(){
+  let html='';
+  EMOJIS.forEach(e=>{
+    html+=`<div class="emoji-opt${e===selectedEmoji?' sel':''}" onclick="selectEmoji('${e}')">${e}</div>`;
+  });
+  document.getElementById('emoji-grid').innerHTML=html;
+}
+
+// ── INTERACTIONS ───────────────────────────────────────────
+function toggleStep(id){
+  checked[id]=!checked[id];
+  save();renderSteps();renderProgress();renderWeekStrip();
+}
+
+function setWorkoutDay(i){workoutDay=i;save();renderSteps();}
+
+function removeStep(id){
+  if(!confirm('Remove this step from your ritual?'))return;
+  steps=steps.filter(s=>s.id!==id);
+  delete checked[id];save();renderSteps();renderProgress();
+}
+
+function confirmReset(){
+  if(!confirm('Reset all of today\'s steps?'))return;
+  checked={};save();renderSteps();renderProgress();renderWeekStrip();
+}
+
+function toggleAddForm(){
+  addFormOpen=!addFormOpen;
+  document.getElementById('add-form').classList.toggle('open',addFormOpen);
+  document.getElementById('add-toggle').textContent=addFormOpen?'✕ Cancel':'+ Add a step to your ritual';
+  if(addFormOpen)document.getElementById('new-step-name').focus();
+}
+
+function closeAddForm(){
+  addFormOpen=false;
+  document.getElementById('add-form').classList.remove('open');
+  document.getElementById('add-toggle').textContent='+ Add a step to your ritual';
+  document.getElementById('new-step-name').value='';
+}
+
+function selectEmoji(e){
+  selectedEmoji=e;renderEmojiGrid();
+}
+
+function saveNewStep(){
+  const name=document.getElementById('new-step-name').value.trim();
+  if(!name){document.getElementById('new-step-name').focus();return;}
+  const id='custom_'+Date.now();
+  steps.push({id,icon:selectedEmoji,name,note:'',custom:true});
+  save();closeAddForm();renderSteps();renderProgress();
+  document.getElementById('new-step-name').value='';
+}
+
+// enter key on input
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('new-step-name').addEventListener('keydown',e=>{if(e.key==='Enter')saveNewStep();});
+});
+
+// ── INIT ───────────────────────────────────────────────────
+load();renderHome();
+</script>
+</body>
+</html>

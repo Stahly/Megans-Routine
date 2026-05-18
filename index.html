@@ -737,7 +737,7 @@ body.light-mode .workout-video-sub{
       <div class="add-form-title">New Step</div>
       <input class="add-input" id="new-step-name" type="text" placeholder="Step name (e.g. Meditate, Journal...)" maxlength="40">
       <span class="emoji-label">Choose an icon</span>
-      <div class="emoji-grid" id="emoji-grid"></div>
+      <div class="icon-picker" id="emoji-grid"></div>
       <div class="form-row">
         <button class="form-btn cancel" onclick="closeAddForm()">Cancel</button>
         <button class="form-btn save" onclick="saveNewStep()">Add Step</button>
@@ -849,54 +849,45 @@ var WORKOUT_CATEGORIES=[
 {
 name:"⚔️ Upper Body",
 videos:[
-{title:"Upper Body Dumbbell Sculpt",channel:"Juice & Toya",duration:"30 min",url:"https://www.youtube.com/watch?v=7AuskEkSi30"},
-{title:"Epic Upper Body Strength",channel:"Caroline Girvan",duration:"30 min",url:"https://www.youtube.com/watch?v=R11QXXj7unc"},
-{title:"Upper Body Burn",channel:"Heather Robertson",duration:"35 min",url:"https://www.youtube.com/watch?v=BtCOrE5R_F0"},
-{title:"Arms & Shoulders Workout",channel:"Pamela Reif",duration:"20 min",url:"https://www.youtube.com/watch?v=ho8fvPH_Ro0"},
-{title:"Upper Body Pilates Sculpt",channel:"Move With Nicole",duration:"30 min",url:"https://www.youtube.com/watch?v=6Ckatjf9LNk"}
+{title:"30 Min Upper Body Dumbbell Workout",channel:"Caroline Girvan",duration:"30 min",url:"https://www.youtube.com/watch?v=R11QXXj7unc"},
+{title:"30 Min Upper Body & Abs for Women",channel:"Sydney Cummings",duration:"30 min",url:"https://www.youtube.com/watch?v=X-vssCk_xOw"},
+{title:"Upper Body Strength — Arms, Back & Shoulders",channel:"Heather Robertson",duration:"30 min",url:"https://www.youtube.com/watch?v=fJQmoPKvjTg"}
 ]
 },
 {
 name:"🐉 Lower Body",
 videos:[
-{title:"Lower Body Dumbbell Workout",channel:"Juice & Toya",duration:"30 min",url:"https://www.youtube.com/watch?v=ay7iptD2m8M"},
-{title:"Leg & Glute Strength",channel:"Heather Robertson",duration:"40 min",url:"https://www.youtube.com/watch?v=R2QHkmtvRWA"},
-{title:"Glutes & Legs Burn",channel:"Growingannanas",duration:"30 min",url:"https://www.youtube.com/watch?v=7fICF_O5esc"},
-{title:"Leg Day Strength",channel:"Juice & Toya",duration:"35 min",url:"https://www.youtube.com/watch?v=3MpUrM_z_Ws"},
-{title:"Lower Body Pilates",channel:"Move With Nicole",duration:"30 min",url:"https://www.youtube.com/watch?v=Uj2Pu90NDCc"}
+{title:"30 Min Legs & Glutes — Back to Basics",channel:"Heather Robertson",duration:"30 min",url:"https://www.youtube.com/watch?v=23eRHbdTqkI"},
+{title:"30 Min Lower Body with Dumbbells & Bench",channel:"Caroline Girvan",duration:"30 min",url:"https://www.youtube.com/watch?v=DPYz0X6jPPo"},
+{title:"30 Min Booty & Legs with Weights",channel:"Chloe Ting",duration:"30 min",url:"https://www.youtube.com/watch?v=B4Xlf8vOvn8"}
 ]
 },
 {
 name:"🔥 Abs & Core",
 videos:[
-{title:"12 Min Core Burn",channel:"MadFit",duration:"12 min",url:"https://www.youtube.com/watch?v=gC_L9qAHVJ8"},
-{title:"Deep Core Workout",channel:"Pamela Reif",duration:"10 min",url:"https://www.youtube.com/watch?v=lCg_gh_fppI"},
-{title:"Standing Abs Workout",channel:"MadFit",duration:"15 min",url:"https://www.youtube.com/watch?v=9V7h1RCsI6E"},
-{title:"Core Strength Pilates",channel:"Move With Nicole",duration:"25 min",url:"https://www.youtube.com/watch?v=qHoM9Z6Tn7s"},
-{title:"Abs & Waist Burn",channel:"Growingannanas",duration:"20 min",url:"https://www.youtube.com/watch?v=GvLAtoKVvAM"}
+{title:"30 Min Abs & Core — Beginner Friendly",channel:"MadFit",duration:"30 min",url:"https://www.youtube.com/watch?v=lo8dUh9pF6U"},
+{title:"30 Min Dumbbell Ab Workout — No Repeats",channel:"Nourish Move Love",duration:"30 min",url:"https://www.youtube.com/watch?v=pMucZJgdYZo"},
+{title:"30 Min ABSolute Core with Caroline",channel:"Caroline Girvan",duration:"30 min",url:"https://www.youtube.com/watch?v=eAi7EAE6-cU"}
 ]
 },
 {
 name:"✨ Full Body",
 videos:[
-{title:"Full Body Dumbbell Burn",channel:"Juice & Toya",duration:"35 min",url:"https://www.youtube.com/watch?v=GViX8riaHX4"},
-{title:"Athletic Full Body Workout",channel:"Heather Robertson",duration:"35 min",url:"https://www.youtube.com/watch?v=Ubk8UXPmzqg"},
-{title:"IRON Full Body",channel:"Caroline Girvan",duration:"30 min",url:"https://www.youtube.com/watch?v=KnaMFF0G4EM"},
-{title:"Full Body Sculpt",channel:"Growingannanas",duration:"30 min",url:"https://www.youtube.com/watch?v=qJnyKbmSx5o"},
-{title:"Pilates Full Body Flow",channel:"Move With Nicole",duration:"35 min",url:"https://www.youtube.com/watch?v=8DZktowZo_k"}
+{title:"30 Min Total Body Dumbbell Workout",channel:"MadFit",duration:"30 min",url:"https://www.youtube.com/watch?v=ECn65drDmFQ"},
+{title:"30 Min Full Body Strength for Women",channel:"Nourish Move Love",duration:"30 min",url:"https://www.youtube.com/watch?v=tiyU63Pv9lY"},
+{title:"30 Min Full Body HIIT with Weights",channel:"Heather Robertson",duration:"30 min",url:"https://www.youtube.com/watch?v=Q3aYsLpAogA"}
 ]
 },
 {
-name:"🌙 Recovery & Pilates",
+name:"🌙 Rest & Restore",
 videos:[
-{title:"Relaxing Pilates Flow",channel:"Move With Nicole",duration:"30 min",url:"https://www.youtube.com/watch?v=8DZktowZo_k"},
-{title:"Low Impact Full Body",channel:"Heather Robertson",duration:"30 min",url:"https://www.youtube.com/watch?v=ml6cT4AZdqI"},
-{title:"Stretch & Sculpt",channel:"Pamela Reif",duration:"20 min",url:"https://www.youtube.com/watch?v=5vP4dAtZRwE"},
-{title:"Mobility & Recovery",channel:"MadFit",duration:"20 min",url:"https://www.youtube.com/watch?v=2MoGxae-zyo"},
-{title:"Gentle Full Body Pilates",channel:"Move With Nicole",duration:"35 min",url:"https://www.youtube.com/watch?v=YtiJ0w3-AyM"}
+{title:"30 Min Full Body Stretch & Flexibility",channel:"MadFit",duration:"30 min",url:"https://www.youtube.com/watch?v=WnSr8w4QEWo"},
+{title:"30 Min Beginner Yoga Flow",channel:"Yoga with Adriene",duration:"30 min",url:"https://www.youtube.com/watch?v=6hZIzMpHl-c"},
+{title:"30 Min Recovery Full Body Stretch",channel:"HASfit",duration:"30 min",url:"https://www.youtube.com/watch?v=wCUI1bwlJqA"}
 ]
 }
 ];
+
 
 
 
@@ -914,7 +905,7 @@ var DAY_LABELS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 /* STATE */
 var steps=[],checked={},workoutDay=0,completedDates={};
 var selectedVideo={};
-var selectedEmoji=EMOJIS[0];
+var selectedEmoji='✨';
 var addFormOpen=false;
 var isDayMode=false;
 var quoteOrder=[],quoteIndex=0,quoteTimer=null;
@@ -1078,31 +1069,12 @@ function renderSteps(){
 
 
 
-var FANTASY_ICONS = [
-  "🕯️","👑","🐉","⚔️","🔮","🌙",
-  "✨","🦋","🏹","📖","🔥","🪞",
-  "🌌","🍓","🧝","💫","☁️","🗡️"
-];
-
-var selectedCustomIcon = "✨";
-
-function setCustomIcon(icon){
-  selectedCustomIcon = icon;
-
-  document.querySelectorAll('.icon-option').forEach(function(el){
-    if(el.dataset.icon === icon){
-      el.classList.add('selected');
-    } else {
-      el.classList.remove('selected');
-    }
-  });
-}
-
-
-var selectedWorkoutCategory = 0;
+var selectedWorkoutCategory = 0; // initialized from workoutDay after load
 
 function setWorkoutCategory(idx){
   selectedWorkoutCategory = idx;
+  workoutDay = idx;
+  save();
 
   var container = document.getElementById('workout-video-grid');
   if(!container) return;
@@ -1120,11 +1092,7 @@ function setWorkoutCategory(idx){
   }).join('');
 
   document.querySelectorAll('.workout-tab').forEach(function(tab,i){
-    if(i===idx){
-      tab.classList.add('active');
-    } else {
-      tab.classList.remove('active');
-    }
+    tab.classList.toggle('active', i===idx);
   });
 }
 
@@ -1170,31 +1138,6 @@ function renderWorkoutCard(step,isDone){
 
 
 
-function addCustomRoutine(event){
-  event.preventDefault();
-
-  var name = document.getElementById('custom-routine-name').value.trim();
-  var note = document.getElementById('custom-routine-note').value.trim();
-
-  if(!name) return;
-
-  var customSteps = JSON.parse(localStorage.getItem('customSteps') || '[]');
-
-  customSteps.push({
-    id:'custom-'+Date.now(),
-    icon:selectedCustomIcon,
-    name:name,
-    note:note
-  });
-
-  localStorage.setItem('customSteps', JSON.stringify(customSteps));
-
-  document.getElementById('custom-routine-name').value='';
-  document.getElementById('custom-routine-note').value='';
-  selectedCustomIcon='✨';
-
-  render();
-}
 
 
 function openVideo(url){
@@ -1207,10 +1150,10 @@ function selectVideo(dayIdx,vidIdx){
 }
 
 function renderEmojiGrid(){
-  document.getElementById('emoji-grid').innerHTML=
-    EMOJIS.map(function(e){
-      return '<div class="emoji-opt'+(e===selectedEmoji?' sel':'')+'" onclick="selectEmoji(\''+e+'\')">'+e+'</div>';
-    }).join('');
+  var icons=["🕯️","👑","🐉","⚔️","🔮","🌙","✨","🦋","🏹","📖","🔥","🪞","🌌","🍓","🧝","💫","☁️","🗡️","🎯","🌸","💎","🦁","🌿","⭐","🎵","🧘","🌊","🏋️","🥗","🫧"];
+  document.getElementById('emoji-grid').innerHTML=icons.map(function(e){
+    return '<button type="button" class="icon-option'+(e===selectedEmoji?' selected':'')+'" data-icon="'+e+'" onclick="selectEmoji(\''+e+'\')">'+e+'</button>';
+  }).join('');
 }
 
 /* VICTORY */
@@ -1268,7 +1211,7 @@ function toggleAddForm(){
   addFormOpen=!addFormOpen;
   document.getElementById('add-form').classList.toggle('open',addFormOpen);
   document.getElementById('add-toggle').textContent=addFormOpen?'\u2715 Cancel':'+ Add a step to your ritual';
-  if(addFormOpen) document.getElementById('new-step-name').focus();
+  if(addFormOpen){document.getElementById('new-step-name').focus();renderEmojiGrid();}
 }
 function closeAddForm(){
   addFormOpen=false;
@@ -1276,7 +1219,12 @@ function closeAddForm(){
   document.getElementById('add-toggle').textContent='+ Add a step to your ritual';
   document.getElementById('new-step-name').value='';
 }
-function selectEmoji(e){selectedEmoji=e;renderEmojiGrid();}
+function selectEmoji(e){
+  selectedEmoji=e;
+  document.querySelectorAll('.icon-option').forEach(function(el){
+    el.classList.toggle('selected', el.dataset.icon===e);
+  });
+}
 function saveNewStep(){
   var name=document.getElementById('new-step-name').value.trim();
   if(!name){document.getElementById('new-step-name').focus();return;}
@@ -1284,6 +1232,38 @@ function saveNewStep(){
   save();closeAddForm();renderSteps();
   setTimeout(updateFinishState,0);renderProgress();
   document.getElementById('new-step-name').value='';
+}
+
+/* TOGGLE STEP — single source of truth */
+function toggleStep(id){
+  if(checked[id]){
+    delete checked[id];
+  } else {
+    checked[id]=true;
+  }
+  save();
+  renderSteps();
+  renderProgress();
+  setTimeout(updateFinishState,0);
+}
+
+/* UPDATE FINISH STATE */
+function updateFinishState(){
+  var total=steps.length;
+  var done=steps.filter(function(s){return checked[s.id];}).length;
+  var all=total>0&&done===total;
+  document.getElementById('complete-banner-wrap').style.display=all?'block':'none';
+  if(all){completedDates[getTodayKey()]=true;save();}
+}
+
+/* render alias so any stray call doesn't break */
+function render(){renderSteps();renderProgress();setTimeout(updateFinishState,0);}
+
+/* THEME TOGGLE (light/dark via body.light-mode) */
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  var isLight=document.body.classList.contains('light-mode');
+  localStorage.setItem('nightCourtTheme', isLight?'light':'dark');
 }
 
 /* UTILS */
@@ -1294,57 +1274,18 @@ function hideEl(id){document.getElementById(id).classList.add('hidden');}
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('new-step-name').addEventListener('keydown',function(e){if(e.key==='Enter')saveNewStep();});
 });
-load();applyMode();renderHome();startQuoteCycle();
+load();
+selectedWorkoutCategory = workoutDay || 0;
+applyMode();
+/* restore light/dark theme */
+(function(){
+  var t=localStorage.getItem('nightCourtTheme');
+  if(t==='light') document.body.classList.add('light-mode');
+})();
+renderHome();startQuoteCycle();
 </script>
 
-<script>
-var currentTheme = localStorage.getItem('nightCourtTheme') || 'dark';
 
-function applyTheme(){
-  if(currentTheme === 'light'){
-    document.body.classList.add('light-mode');
-  } else {
-    document.body.classList.remove('light-mode');
-  }
-}
-
-function toggleTheme(){
-  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-  localStorage.setItem('nightCourtTheme', currentTheme);
-  applyTheme();
-}
-
-function toggleStep(id){
-  if(completedSteps[id]){
-    delete completedSteps[id];
-  } else {
-    completedSteps[id] = true;
-  }
-
-  localStorage.setItem('completedSteps', JSON.stringify(completedSteps));
-
-  render();
-  updateFinishState();
-}
-
-function beginRitual(){
-  var today = new Date().toDateString();
-  var lastBegin = localStorage.getItem('lastBeginRitual');
-
-  if(lastBegin !== today){
-    var streak = parseInt(localStorage.getItem('ritualStreak') || '0', 10);
-    streak += 1;
-    localStorage.setItem('ritualStreak', streak);
-    localStorage.setItem('lastBeginRitual', today);
-  }
-
-  render();
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  applyTheme();
-});
-</script>
 
 </body>
 </html>

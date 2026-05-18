@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Megan's Ritual">
+<title>Megan's Daily Ritual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --bg:#07050E;
+  --bg2:#100B1A;
+  --card:rgba(255,255,255,0.045);
+  --card-done:rgba(180,130,60,0.12);
+  --gold:#D4A843;
+  --gold2:#E8C878;
+  --rose:#B5435F;
+  --rose2:#D4607A;
+  --violet:#7B4FA0;
+  --text:#EDE5CF;
+  --text2:#7A7390;
+  --border:rgba(212,168,67,0.22);
+  --border-done:rgba(212,168,67,0.5);
+  --shadow:rgba(0,0,0,0.6);
+  --orb1:rgba(110,20,50,0.22);
+  --orb2:rgba(55,15,100,0.25);
+  --orb3:rgba(180,100,30,0.1);
+}
+
+body.day-mode{
+  --bg:#F2EAD8;
+  --bg2:#E8DFC8;
+  --card:rgba(0,0,0,0.05);
+  --card-done:rgba(160,120,40,0.13);
+  --gold:#8A6010;
+  --gold2:#B08030;
+  --rose:#8A2840;
+  --rose2:#A03555;
+  --violet:#5A3080;
+  --text:#1A1208;
+  --text2:#5C5040;
+  --border:rgba(138,96,16,0.3);
+  --border-done:rgba(138,96,16,0.6);
+  --shadow:rgba(0,0,0,0.2);
+  --orb1:rgba(180,130,60,0.15);
+  --orb2:rgba(140,80,40,0.12);
+  --orb3:rgba(200,150,60,0.1);
+}
+
+html,body{
+  height:100%;background:var(--bg);color:var(--text);
+  font-family:'Lora',Georgia,serif;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+  transition:background 0.4s,color 0.4s;
+}
+
+#stars-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;transition:opacity 0.6s;}
+body.day-mode #stars-canvas{opacity:0;}
+
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.orb1{width:380px;height:380px;background:var(--orb1);top:-100px;right:-100px;}
+.orb2{width:280px;height:280px;background:var(--orb2);bottom:40px;left:-80px;}
+.orb3{width:200px;height:200px;background:var(--orb3);top:50%;left:50%;transform:translate(-50%,-50%);}
+
+.mode-btn{
+  position:fixed;top:14px;right:14px;z-index:200;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--border);
+  font-size:18px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.25s;box-shadow:0 2px 14px var(--shadow);
+}
+.mode-btn:active{transform:scale(0.92);}
+
+.screen{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;}
+.screen.hidden{display:none!important;}
+
+/* HOME */
+#home{align-items:center;justify-content:center;text-align:center;padding:56px 24px 72px;}
+.home-date{
+  position:absolute;top:20px;left:0;right:0;
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;
+  color:var(--text2);text-transform:uppercase;
+}
+.rune-line{font-size:12px;letter-spacing:0.4em;color:var(--gold);opacity:0.4;margin-bottom:16px;}
+.crest{font-size:56px;margin-bottom:20px;animation:float 5s ease-in-out infinite;
+  filter:drop-shadow(0 0 22px rgba(212,168,67,0.4));}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-11px);}}
+.home-greeting{
+  font-family:'Cinzel',serif;font-size:11px;font-weight:500;
+  letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;
+}
+.home-name{
+  font-family:'Cinzel',serif;font-size:40px;font-weight:700;color:var(--text);
+  line-height:1.1;margin-bottom:6px;text-shadow:0 0 50px rgba(212,168,67,0.18);
+}
+.home-tagline{font-size:14px;color:var(--text2);font-style:italic;margin-bottom:30px;}
+.streak-row{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 22px;border:1px solid var(--border);border-radius:99px;
+  background:var(--card);margin-bottom:28px;
+}
+.streak-num{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);}
+.streak-lbl{font-size:12px;color:var(--text2);}
+.quote-wrap{
+  max-width:310px;margin:0 auto 36px;
+  padding:16px 20px 14px;border-left:2px solid var(--gold);
+  background:var(--card);border-radius:0 14px 14px 0;text-align:left;
+  position:relative;overflow:hidden;transition:opacity 0.4s ease;
+}
+.quote-wrap::before{
+  content:'\275D';position:absolute;top:-6px;left:10px;
+  font-size:50px;color:var(--gold);opacity:0.08;font-family:Georgia,serif;pointer-events:none;
+}
+.quote-text{font-size:13px;font-style:italic;color:var(--text2);line-height:1.8;margin-bottom:6px;}
+.quote-src{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:0.1em;}
+.start-btn{
+  display:inline-flex;align-items:center;gap:10px;padding:16px 44px;
+  background:linear-gradient(135deg,#6B1530 0%,#B5435F 50%,#D4A843 130%);
+  color:#F5EDD6;font-family:'Cinzel',serif;font-size:13px;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;border:none;border-radius:99px;
+  cursor:pointer;transition:transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 4px 32px rgba(107,21,48,0.55),0 0 0 1px rgba(212,168,67,0.25);
+}
+.start-btn:active{transform:scale(0.97);}
+.ios-tip{
+  margin-top:26px;max-width:270px;padding:12px 15px;background:var(--card);
+  border:1px solid var(--border);border-radius:13px;
+  font-size:11px;color:var(--text2);line-height:1.7;text-align:left;
+}
+.ios-tip strong{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:0.08em;display:block;margin-bottom:3px;}
+
+/* ROUTINE */
+#routine{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#routine::-webkit-scrollbar{width:3px;}
+#routine::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.routine-top{
+  padding:50px 20px 16px;text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(107,21,48,0.2) 0%,transparent 100%);
+  position:relative;flex-shrink:0;
+}
+.back-btn{
+  position:absolute;top:16px;left:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:99px;
+  padding:7px 15px;font-family:'Cinzel',serif;font-size:10px;
+  letter-spacing:0.1em;color:var(--text2);cursor:pointer;
+}
+.back-btn:active{color:var(--gold);border-color:var(--gold);}
+.routine-title{font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.routine-sub{font-size:11px;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:0.12em;}
+
+.week-strip{display:flex;gap:5px;padding:12px 14px 2px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.week-strip::-webkit-scrollbar{display:none;}
+.wd{flex:1;min-width:36px;text-align:center;padding:7px 2px;border:1px solid var(--border);border-radius:9px;background:var(--card);}
+.wd.today{border-color:rgba(212,168,67,0.65);background:rgba(212,168,67,0.07);}
+.wd.wdone{border-color:rgba(212,168,67,0.4);background:rgba(212,168,67,0.07);}
+.wd-l{font-size:9px;font-family:'Cinzel',serif;color:var(--text2);display:block;margin-bottom:3px;letter-spacing:0.07em;}
+.wd-n{font-size:12px;font-family:'Cinzel',serif;color:var(--text);display:block;}
+.wd-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin:3px auto 0;}
+.wd.today .wd-l,.wd.today .wd-n,.wd.wdone .wd-l,.wd.wdone .wd-n{color:var(--gold);}
+
+.prog-wrap{padding:12px 16px;flex-shrink:0;}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:7px;}
+.prog-lbl{font-size:10px;font-family:'Cinzel',serif;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
+.prog-ct{font-size:10px;font-family:'Cinzel',serif;color:var(--gold);}
+.prog-track{height:3px;background:rgba(128,128,128,0.12);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#6B1530,#B5435F,#D4A843);border-radius:99px;transition:width 0.5s ease;}
+
+.complete-banner{
+  margin:4px 14px 6px;padding:18px;
+  background:linear-gradient(135deg,rgba(107,21,48,0.35),rgba(212,168,67,0.15));
+  border:1px solid rgba(212,168,67,0.5);border-radius:16px;text-align:center;flex-shrink:0;
+}
+.complete-banner h3{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);margin-bottom:4px;}
+.complete-banner p{font-size:12px;color:var(--text2);font-style:italic;margin-bottom:14px;}
+.finish-ritual-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:13px 30px;
+  background:linear-gradient(135deg,#6B1530,#D4A843 160%);
+  color:#F5EDD6;font-family:'Cinzel',serif;font-size:12px;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;border:none;border-radius:99px;
+  cursor:pointer;box-shadow:0 4px 22px rgba(107,21,48,0.45);
+}
+.finish-ritual-btn:active{transform:scale(0.96);}
+
+.reset-row{padding:0 14px 4px;display:flex;justify-content:flex-end;flex-shrink:0;}
+.reset-link{font-size:10px;color:var(--text2);cursor:pointer;font-family:'Cinzel',serif;letter-spacing:0.06em;border:none;background:none;padding:6px 0;}
+.reset-link:active{color:var(--rose);}
+
+/* STEPS */
+.steps-list{padding:8px 14px 120px;scroll-behavior:smooth;}
+.step-card{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.watch-btn,.mark-wo-btn,.start-btn,.vic-home-btn,.finish-ritual-btn{min-height:52px;}
+.workout-expand{display:flex;flex-direction:column;gap:10px;}
+.yt-option{min-height:74px;}
+@supports(padding:max(0px)){
+  .screen{padding-bottom:max(20px,env(safe-area-inset-bottom));}
+}
+.sticky-mobile-actions{
+  position:sticky;
+  bottom:0;
+  background:linear-gradient(180deg,transparent,var(--bg) 25%);
+  padding-top:12px;
+}
+.step-card{
+  display:flex;align-items:flex-start;gap:12px;padding:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:15px;
+  margin-bottom:9px;position:relative;overflow:hidden;
+}
+.step-card.done{background:var(--card-done);border-color:var(--border-done);}
+.step-card.tappable{cursor:pointer;}
+.step-card.tappable:active{opacity:0.78;}
+.step-icon{
+  font-size:22px;width:42px;height:42px;display:flex;align-items:center;
+  justify-content:center;background:rgba(128,128,128,0.07);border-radius:11px;flex-shrink:0;
+}
+.step-card.done .step-icon{background:rgba(212,168,67,0.12);}
+.step-body{flex:1;min-width:0;}
+.step-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.step-card.done .step-name{color:var(--gold);}
+.step-note{font-size:12px;color:var(--text2);font-style:italic;}
+.step-card.done .step-note{color:rgba(212,168,67,0.55);}
+.check-ring{
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid rgba(128,128,128,0.28);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;margin-top:9px;transition:all 0.22s;
+}
+.step-card.done .check-ring{background:var(--gold);border-color:var(--gold);color:#07050E;font-weight:700;}
+.del-btn{
+  position:absolute;top:8px;right:8px;width:24px;height:24px;
+  border-radius:50%;background:transparent;border:none;
+  color:var(--text2);font-size:17px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;opacity:0.4;
+}
+.del-btn:active{background:rgba(255,80,80,0.18);color:#FF7070;opacity:1;}
+
+/* WORKOUT EXPAND */
+.workout-expand{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.wo-section-label{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--text2);margin-bottom:8px;
+}
+.day-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.day-pill{
+  padding:6px 14px;border-radius:99px;border:1px solid var(--border);
+  background:transparent;font-size:10px;font-family:'Cinzel',serif;
+  color:var(--text2);cursor:pointer;letter-spacing:0.07em;
+}
+.day-pill.active{background:rgba(212,168,67,0.14);border-color:var(--gold);color:var(--gold);}
+.day-pill:active:not(.active){background:rgba(212,168,67,0.07);border-color:rgba(212,168,67,0.4);}
+.workout-focus{
+  font-size:11px;font-family:'Cinzel',serif;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text2);margin-bottom:12px;
+}
+.wo-select-label{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--gold);opacity:0.8;margin-bottom:8px;
+}
+.yt-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.yt-option{
+  display:flex;align-items:center;gap:10px;padding:11px 13px;
+  border-radius:11px;cursor:pointer;
+  border:1.5px solid var(--border);background:rgba(255,255,255,0.02);
+  transition:border-color 0.18s,background 0.18s;
+}
+.yt-option.selected{border-color:rgba(212,168,67,0.65);background:rgba(212,168,67,0.08);}
+.yt-option:active{opacity:0.75;}
+.yt-radio{
+  width:17px;height:17px;border-radius:50%;border:1.5px solid var(--text2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:all 0.18s;
+}
+.yt-option.selected .yt-radio{border-color:var(--gold);background:var(--gold);}
+.yt-radio-dot{width:7px;height:7px;border-radius:50%;background:#07050E;opacity:0;transition:opacity 0.18s;}
+.yt-option.selected .yt-radio-dot{opacity:1;}
+.yt-info{flex:1;min-width:0;}
+.yt-title{font-family:'Cinzel',serif;font-size:11px;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.yt-option.selected .yt-title{color:var(--gold);}
+.yt-meta{font-size:10px;color:var(--text2);}
+.yt-play-icon{font-size:18px;flex-shrink:0;opacity:0.6;transition:opacity 0.18s;}
+.yt-option.selected .yt-play-icon{opacity:1;}
+
+.wo-action-row{display:flex;flex-direction:column;gap:7px;}
+.watch-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:12px;background:#CC0000;color:#fff;
+  border:none;border-radius:10px;font-family:'Cinzel',serif;font-size:11px;font-weight:600;
+  letter-spacing:0.1em;cursor:pointer;text-decoration:none;
+}
+.watch-btn:active{opacity:0.82;}
+.watch-btn.disabled{
+  background:rgba(128,128,128,0.14);color:var(--text2);
+  cursor:default;pointer-events:none;
+}
+.mark-wo-btn{
+  width:100%;padding:10px;background:transparent;
+  border:1px solid var(--border);border-radius:10px;
+  font-family:'Cinzel',serif;font-size:10px;color:var(--text2);
+  cursor:pointer;letter-spacing:0.09em;
+}
+.mark-wo-btn:active:not(.done){border-color:var(--gold);color:var(--gold);}
+.mark-wo-btn.done{background:rgba(212,168,67,0.1);border-color:var(--gold);color:var(--gold);}
+
+/* ADD STEP */
+.divider{display:flex;align-items:center;gap:10px;padding:6px 14px 10px;flex-shrink:0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-star{font-size:11px;color:var(--gold);opacity:0.6;}
+.add-zone{padding:4px 14px 36px;flex-shrink:0;}
+.add-toggle-btn{
+  width:100%;padding:13px;background:transparent;
+  border:1px dashed rgba(212,168,67,0.28);border-radius:13px;
+  color:var(--text2);font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.12em;cursor:pointer;
+}
+.add-toggle-btn:active{border-color:var(--gold);color:var(--gold);}
+.add-form{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:8px;display:none;}
+.add-form.open{display:block;}
+.add-form-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.12em;color:var(--text2);margin-bottom:10px;text-transform:uppercase;}
+.add-input{
+  width:100%;background:rgba(128,128,128,0.07);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;color:var(--text);font-family:'Lora',serif;font-size:14px;
+  margin-bottom:10px;outline:none;transition:border-color 0.2s;
+}
+.add-input:focus{border-color:var(--gold);}
+.add-input::placeholder{color:var(--text2);}
+.emoji-label{font-size:10px;font-family:'Cinzel',serif;color:var(--text2);letter-spacing:0.1em;margin-bottom:8px;display:block;}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.emoji-opt{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--border);font-size:18px;cursor:pointer;}
+.emoji-opt.sel{border-color:var(--gold);background:rgba(212,168,67,0.12);}
+.emoji-opt:active{border-color:var(--gold);}
+.form-row{display:flex;gap:8px;}
+.form-btn{flex:1;padding:10px;border-radius:9px;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.09em;cursor:pointer;}
+.form-btn.save{background:rgba(212,168,67,0.12);border-color:var(--gold);color:var(--gold);}
+.form-btn.cancel{background:transparent;color:var(--text2);}
+
+/* VICTORY */
+#victory{
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 28px 80px;
+  background:radial-gradient(ellipse at 50% 10%,rgba(107,21,48,0.35) 0%,transparent 65%);
+}
+.vic-runes{font-size:13px;letter-spacing:0.5em;color:var(--gold);opacity:0.45;margin-bottom:18px;}
+.vic-sparkle{font-size:28px;margin-bottom:10px;animation:sparkle 2.2s ease-in-out infinite;}
+@keyframes sparkle{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+.vic-crown{font-size:68px;margin-bottom:16px;animation:float 5s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(212,168,67,0.55));}
+.vic-title{font-family:'Cinzel',serif;font-size:27px;font-weight:700;color:var(--gold);margin-bottom:6px;letter-spacing:0.04em;}
+.vic-name{font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rose2);margin-bottom:8px;}
+.vic-msg{font-size:14px;font-style:italic;color:var(--text2);margin-bottom:26px;line-height:1.7;max-width:290px;}
+.vic-quote{
+  max-width:300px;margin:0 auto 26px;padding:18px 22px;
+  border:1px solid var(--border);border-radius:15px;background:var(--card);
+  font-size:13px;font-style:italic;color:var(--text2);line-height:1.8;
+}
+.vic-quote-src{display:block;margin-top:8px;font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:0.1em;font-style:normal;}
+.vic-stats{display:flex;gap:14px;margin-bottom:32px;}
+.vic-stat{flex:1;padding:14px 10px;background:var(--card);border:1px solid var(--border);border-radius:13px;}
+.vic-stat-num{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold);}
+.vic-stat-lbl{font-size:10px;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:0.08em;margin-top:3px;}
+.vic-home-btn{
+  display:inline-flex;align-items:center;gap:10px;padding:15px 38px;
+  background:linear-gradient(135deg,#6B1530,#B5435F 60%,#D4A843 140%);
+  color:#F5EDD6;font-family:'Cinzel',serif;font-size:12px;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;border:none;border-radius:99px;
+  cursor:pointer;box-shadow:0 4px 30px rgba(107,21,48,0.5);
+}
+.vic-home-btn:active{transform:scale(0.96);}
+
+@keyframes burst{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(0.2);opacity:0;}}
+.particle{position:fixed;width:9px;height:9px;border-radius:50%;pointer-events:none;animation:burst 1s ease-out forwards;z-index:999;}
+
+@media(max-width:380px){.home-name{font-size:34px;}.start-btn{padding:15px 34px;}}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<button class="mode-btn" id="mode-btn" onclick="toggleMode()">&#127769;</button>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="home-date" id="home-date"></div>
+  <div class="rune-line">&#5867; &#10022; &#5867;</div>
+  <div class="crest" id="home-crest">&#127769;</div>
+  <div class="home-greeting" id="home-greeting">Good Evening</div>
+  <div class="home-name">Megan</div>
+  <div class="home-tagline" id="home-tagline">Your ritual awaits, my queen.</div>
+  <div class="streak-row">
+    <span style="font-size:18px">&#128293;</span>
+    <span class="streak-num" id="streak-num">0</span>
+    <span class="streak-lbl">day streak</span>
+  </div>
+  <div class="quote-wrap" id="quote-wrap">
+    <div class="quote-text" id="quote-text"></div>
+    <div class="quote-src" id="quote-src"></div>
+  </div>
+  <button class="start-btn" onclick="openRoutine()">&#10022; Begin Your Ritual</button>
+  <div class="ios-tip">
+    <strong>&#128241; Add to iPhone Home Screen</strong>
+    Open in Safari &rarr; tap the <strong>Share &#8593;</strong> button &rarr; tap <strong>&ldquo;Add to Home Screen&rdquo;</strong>. Opens as a full-screen app with no browser bar.
+  </div>
+</div>
+
+<!-- ROUTINE -->
+<div id="routine" class="screen hidden">
+  <div class="routine-top">
+    <button class="back-btn" onclick="openHome()">&larr; Home</button>
+    <div class="routine-title" id="routine-title">&#10022; Morning Ritual &#10022;</div>
+    <div class="routine-sub" id="routine-sub"></div>
+  </div>
+  <div class="week-strip" id="week-strip"></div>
+  <div class="prog-wrap">
+    <div class="prog-hd">
+      <span class="prog-lbl">&#9876; Quest Progress</span>
+      <span class="prog-ct" id="prog-ct">0 / 0</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div id="complete-banner-wrap" style="display:none">
+    <div class="complete-banner">
+      <h3>&#10022; Ritual Complete &#10022;</h3>
+      <p>You are the storm, Megan. Extraordinary.</p>
+      <button class="finish-ritual-btn" onclick="openVictory()">&#127942; Finish Ritual</button>
+    </div>
+  </div>
+  <div class="reset-row">
+    <button class="reset-link" onclick="confirmReset()">&#8635; Reset today</button>
+  </div>
+  <div class="steps-list" id="steps-list"></div>
+  <div class="divider"><div class="divider-line"></div><div class="divider-star">&#10022;</div><div class="divider-line"></div></div>
+  <div class="add-zone">
+    <button class="add-toggle-btn" id="add-toggle" onclick="toggleAddForm()">+ Add a step to your ritual</button>
+    <div class="add-form" id="add-form">
+      <div class="add-form-title">New Step</div>
+      <input class="add-input" id="new-step-name" type="text" placeholder="Step name (e.g. Meditate, Journal...)" maxlength="40">
+      <span class="emoji-label">Choose an icon</span>
+      <div class="emoji-grid" id="emoji-grid"></div>
+      <div class="form-row">
+        <button class="form-btn cancel" onclick="closeAddForm()">Cancel</button>
+        <button class="form-btn save" onclick="saveNewStep()">Add Step</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VICTORY -->
+<div id="victory" class="screen hidden">
+  <div class="vic-runes">&#5867; &#10022; &#5867;</div>
+  <div class="vic-sparkle">&#10024;</div>
+  <div class="vic-crown">&#128081;</div>
+  <div class="vic-title">You Did It!</div>
+  <div class="vic-name">Queen Megan</div>
+  <div class="vic-msg" id="vic-msg">Another day conquered. Every step you take, every habit you build &mdash; that is real magic, and it is all yours.</div>
+  <div class="vic-quote">
+    <span id="vic-qt"></span>
+    <span class="vic-quote-src" id="vic-qs"></span>
+  </div>
+  <div class="vic-stats">
+    <div class="vic-stat">
+      <div class="vic-stat-num" id="vic-streak">0</div>
+      <div class="vic-stat-lbl">Day Streak &#128293;</div>
+    </div>
+    <div class="vic-stat">
+      <div class="vic-stat-num" id="vic-steps">0</div>
+      <div class="vic-stat-lbl">Steps Done &#10022;</div>
+    </div>
+  </div>
+  <button class="vic-home-btn" onclick="openHome()">&larr; Return to the Realm</button>
+</div>
+
+<script>
+/* STARS */
+(function(){
+  var c=document.getElementById('stars-canvas'),ctx=c.getContext('2d'),stars=[];
+  function resize(){c.width=innerWidth;c.height=innerHeight;}
+  function init(){
+    resize();stars=[];
+    var n=Math.floor((c.width*c.height)/5000);
+    for(var i=0;i<n;i++) stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.4+0.15,a:Math.random(),da:(Math.random()*0.007+0.002)*(Math.random()<.5?1:-1),gold:Math.random()<0.1});
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(function(s){
+      s.a+=s.da;if(s.a<=0||s.a>=1)s.da*=-1;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.gold?'rgba(212,168,67,'+s.a+')':'rgba(255,255,255,'+(s.a*.78)+')';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  addEventListener('resize',init);init();draw();
+})();
+
+/* DATA */
+var QUOTES=[
+  {text:"To the stars who listen \u2014 and the dreams that are answered.",src:"A Court of Mist and Fury"},
+  {text:"You could rattle the stars. You could do anything, if only you dared.",src:"A Court of Thorns and Roses"},
+  {text:"She is the storm, and the calm. She is everything.",src:"ACOTAR"},
+  {text:"Some things require a willing heart. And she had the most willing heart of all.",src:"A Court of Silver Flames"},
+  {text:"The most powerful magic in the world is a woman who knows her own mind.",src:"ACOTAR"},
+  {text:"She wore her scars as her armor, and her kindness as a crown.",src:"A Court of Wings and Ruin"},
+  {text:"She is not running from something. She is running toward everything.",src:"A Court of Silver Flames"},
+  {text:"She chose herself first. That is where the power begins.",src:"A Court of Silver Flames"},
+  {text:"She was full of fire \u2014 the kind that gives warmth, not burns.",src:"ACOTAR"},
+  {text:"What you are is a gift. What you do with it is your legacy.",src:"A Court of Mist and Fury"},
+  {text:"Even the darkest night must answer to the dawn.",src:"ACOTAR"},
+  {text:"She kept going. That was her magic.",src:"House of Earth and Blood"},
+  {text:"She was fierce and she was broken and she was still standing.",src:"House of Earth and Blood"},
+  {text:"Stars existed long before we named them. She was like that \u2014 ancient and bright and real.",src:"House of Sky and Breath"},
+  {text:"The fire in her eyes burns brighter than any throne.",src:"House of the Dragon"},
+  {text:"A crown does not make a queen. Her will does.",src:"House of the Dragon"},
+  {text:"She did not ask for the throne. But she would not be denied it.",src:"House of the Dragon"},
+  {text:"Blood makes you related. Loyalty makes you family.",src:"House of the Dragon"},
+  {text:"Dragons do not apologize for their fire.",src:"House of the Dragon"},
+  {text:"She was a queen \u2014 not in exile, but in waiting.",src:"House of the Dragon"},
+  {text:"You have survived every storm that came for you. That is not luck. That is power.",src:"The Serpent and the Wings of Night"},
+  {text:"She did not beg for the light. She became it.",src:"The Ashes and the Star-Cursed King"},
+  {text:"There is a kind of strength in choosing, even when every choice is hard.",src:"Children of the Sun"},
+  {text:"She was made of fractured things, and that is what made her whole.",src:"The Serpent and the Wings of Night"},
+  {text:"To endure is its own form of courage.",src:"The Ashes and the Star-Cursed King"},
+  {text:"She did not need wings to fly. She needed only herself.",src:"Children of the Sun"},
+  {text:"The dark does not swallow you if you carry your own light.",src:"One Dark Window"},
+  {text:"She was not the monster in the story. She was the one who survived it.",src:"Two Twisted Crowns"},
+  {text:"Every scar is a map of a battle you lived through.",src:"Two Twisted Crowns"},
+  {text:"She had learned to hold both fire and tenderness at once.",src:"One Dark Window"},
+  {text:"Daylight is for mortals. True power wakes at dusk.",src:"Night Court Proverb"},
+  {text:"Rise. The stars did not align themselves for you to stay still.",src:"Night Court Maxim"},
+  {text:"One breath. One step. One day. That is how empires are built.",src:"Prythian Wisdom"},
+  {text:"A woman who moves with purpose shakes the foundations of the world.",src:"Seven Kingdoms Proverb"},
+  {text:"Every queen was first a girl who decided she was worth it.",src:"Prythian Archives"},
+];
+
+var VICTORY_MSGS=[
+  "Another day claimed. Every habit built is a spell cast \u2014 and yours are stacking beautifully.",
+  "Look at you, Megan. The realm is lucky to have someone this dedicated in it.",
+  "You showed up. You did the work. That is what queens do \u2014 every single day.",
+  "This is how legends are made. Not in a single moment, but in a thousand small choices like this one.",
+  "Your consistency is your crown. Wear it well today.",
+  "The stars noticed. Every step you took today was a step toward the woman you are becoming.",
+  "You finished. You always do. That is not nothing \u2014 that is everything.",
+];
+
+
+var WORKOUT_DAYS=[
+  {
+    id:1,
+    label:"Day I",
+    focus:"Upper Body Strength — Sculpt & Tone",
+    videos:[
+      {
+        title:"30 Min Upper Body Dumbbell Sculpt",
+        channel:"Juice & Toya",
+        duration:"30 min",
+        url:"https://www.youtube.com/watch?v=7AuskEkSi30"
+      },
+      {
+        title:"Strong Upper Body Burn",
+        channel:"Caroline Girvan",
+        duration:"32 min",
+        url:"https://www.youtube.com/results?search_query=caroline+girvan+upper+body+dumbbell+30+minute"
+      }
+    ]
+  },
+  {
+    id:2,
+    label:"Day II",
+    focus:"Lower Body — Glutes & Legs",
+    videos:[
+      {
+        title:"Lower Body Dumbbell Workout",
+        channel:"Juice & Toya",
+        duration:"30 min",
+        url:"https://www.youtube.com/watch?v=ay7iptD2m8M"
+      },
+      {
+        title:"Glutes & Legs Strength",
+        channel:"Heather Robertson",
+        duration:"35 min",
+        url:"https://www.youtube.com/results?search_query=heather+robertson+glutes+legs+strength+30+minute"
+      }
+    ]
+  },
+  {
+    id:3,
+    label:"Day III",
+    focus:"Full Body + Core Ritual",
+    videos:[
+      {
+        title:"Full Body Dumbbell Burn",
+        channel:"Juice & Toya",
+        duration:"35 min",
+        url:"https://www.youtube.com/watch?v=GViX8riaHX4"
+      },
+      {
+        title:"Pilates Core & Strength Flow",
+        channel:"Move With Nicole",
+        duration:"30 min",
+        url:"https://www.youtube.com/results?search_query=move+with+nicole+pilates+core+strength+30+min"
+      }
+    ],
+    coreRoutine:{
+      title:"12 Min Core Finisher",
+      channel:"MadFit",
+      duration:"12 min",
+      url:"https://www.youtube.com/results?search_query=madfit+12+minute+abs+workout"
+    }
+  },
+  {
+    id:4,
+    label:"Day IV",
+    focus:"Upper Body Pull — Back, Arms & Posture",
+    videos:[
+      {
+        title:"Lean Arms & Back Workout",
+        channel:"Juice & Toya",
+        duration:"30 min",
+        url:"https://www.youtube.com/watch?v=0zhvUV1bAVQ"
+      },
+      {
+        title:"Back & Biceps Dumbbell Session",
+        channel:"Caroline Girvan",
+        duration:"30 min",
+        url:"https://www.youtube.com/results?search_query=caroline+girvan+back+biceps+dumbbell"
+      }
+    ]
+  },
+  {
+    id:5,
+    label:"Day V",
+    focus:"Lower Body Power — Glutes & Hamstrings",
+    videos:[
+      {
+        title:"Leg Day Strength Session",
+        channel:"Juice & Toya",
+        duration:"35 min",
+        url:"https://www.youtube.com/watch?v=3MpUrM_z_Ws"
+      },
+      {
+        title:"Lower Body Sculpt",
+        channel:"Growingannanas",
+        duration:"30 min",
+        url:"https://www.youtube.com/results?search_query=growingannanas+lower+body+strength"
+      }
+    ]
+  },
+  {
+    id:6,
+    label:"Day VI",
+    focus:"Full Body Reset + Core",
+    videos:[
+      {
+        title:"Athletic Full Body Workout",
+        channel:"Heather Robertson",
+        duration:"35 min",
+        url:"https://www.youtube.com/results?search_query=heather+robertson+full+body+dumbbell+35+minute"
+      },
+      {
+        title:"Pilates Strength Flow",
+        channel:"Move With Nicole",
+        duration:"30 min",
+        url:"https://www.youtube.com/results?search_query=move+with+nicole+pilates+strength+30+min"
+      }
+    ],
+    coreRoutine:{
+      title:"10 Min Deep Core Burn",
+      channel:"Pamela Reif",
+      duration:"10 min",
+      url:"https://www.youtube.com/results?search_query=pamela+reif+10+minute+abs"
+    }
+  }
+];
+
+
+var DEFAULT_STEPS=[
+  {id:"shower",icon:"\uD83D\uDEB7",name:"Shower",note:"Rise like the queen you are"},
+  {id:"teeth",icon:"\u2728",name:"Brush Teeth & Skincare",note:"Your glow-up ritual"},
+  {id:"workout",icon:"\u2694\uFE0F",name:"Workout",note:"Today's training session",type:"workout"},
+  {id:"breakfast",icon:"\uD83C\uDF73",name:"Breakfast",note:"Fuel for the realm"},
+];
+
+var EMOJIS=["\uD83E\uDDD8","\uD83D\uDCDA","\u2615","\uD83E\uDD57","\uD83D\uDC8A","\uD83C\uDF3F","\uD83C\uDFA7","\uD83D\uDECF","\uD83C\uDFC3","\uD83D\uDCA7","\uD83E\uDDF4","\uD83C\uDF05","\uD83D\uDCDD","\uD83E\uDDC1","\uD83C\uDF75","\uD83C\uDFAF","\uD83C\uDF19","\uD83D\uDC85","\uD83D\uDECB","\uD83D\uDC09","\uD83C\uDF38","\uD83C\uDF53","\uD83E\uDD64","\uD83E\uDEAB","\uD83D\uDD6F\uFE0F","\uD83E\uDD8B","\uD83D\uDD2E","\u26A1","\uD83C\uDF3A","\uD83E\uDEB7"];
+var DAY_LABELS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+/* STATE */
+var steps=[],checked={},workoutDay=0,completedDates={};
+var selectedVideo={};
+var selectedEmoji=EMOJIS[0];
+var addFormOpen=false;
+var isDayMode=false;
+var quoteOrder=[],quoteIndex=0,quoteTimer=null;
+
+/* STORAGE */
+function getTodayKey(){return new Date().toISOString().split('T')[0];}
+function load(){
+  try{
+    var s=localStorage.getItem('megan_steps');
+    steps=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_STEPS));
+    var c=localStorage.getItem('megan_checked_'+getTodayKey());
+    checked=c?JSON.parse(c):{};
+    var wd=localStorage.getItem('megan_workout_day');
+    workoutDay=wd?parseInt(wd):0;
+    var cd=localStorage.getItem('megan_completed_dates');
+    completedDates=cd?JSON.parse(cd):{};
+    var dm=localStorage.getItem('megan_daymode');
+    isDayMode=dm==='1';
+    var sv=localStorage.getItem('megan_sel_video');
+    selectedVideo=sv?JSON.parse(sv):{};
+  }catch(e){
+    steps=JSON.parse(JSON.stringify(DEFAULT_STEPS));
+    checked={};workoutDay=0;completedDates={};selectedVideo={};
+  }
+}
+function save(){
+  localStorage.setItem('megan_steps',JSON.stringify(steps));
+  localStorage.setItem('megan_checked_'+getTodayKey(),JSON.stringify(checked));
+  localStorage.setItem('megan_workout_day',String(workoutDay));
+  localStorage.setItem('megan_completed_dates',JSON.stringify(completedDates));
+  localStorage.setItem('megan_daymode',isDayMode?'1':'0');
+  localStorage.setItem('megan_sel_video',JSON.stringify(selectedVideo));
+}
+
+/* MODE */
+function toggleMode(){isDayMode=!isDayMode;applyMode();save();}
+function applyMode(){
+  document.body.classList.toggle('day-mode',isDayMode);
+  document.getElementById('mode-btn').textContent=isDayMode?'\uD83C\uDF19':'\u2600\uFE0F';
+  var cr=document.getElementById('home-crest');
+  if(cr) cr.textContent=isDayMode?'\u2600\uFE0F':'\uD83C\uDF19';
+}
+
+/* STREAK */
+function calcStreak(){
+  var streak=0,d=new Date();
+  for(var i=0;i<400;i++){
+    if(completedDates[d.toISOString().split('T')[0]]) streak++;
+    else break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+
+/* QUOTES */
+function shuffleQuotes(){
+  quoteOrder=QUOTES.map(function(_,i){return i;}).sort(function(){return Math.random()-0.5;});
+  quoteIndex=0;
+}
+function startQuoteCycle(){
+  stopQuoteCycle();shuffleQuotes();showQuote();
+  quoteTimer=setInterval(function(){
+    quoteIndex=(quoteIndex+1)%quoteOrder.length;
+    var w=document.getElementById('quote-wrap');
+    w.style.opacity='0';
+    setTimeout(function(){showQuote();w.style.opacity='1';},400);
+  },9000);
+}
+function stopQuoteCycle(){if(quoteTimer){clearInterval(quoteTimer);quoteTimer=null;}}
+function showQuote(){
+  var q=QUOTES[quoteOrder[quoteIndex]];
+  document.getElementById('quote-text').textContent='\u201c'+q.text+'\u201d';
+  document.getElementById('quote-src').textContent='\u2014 '+q.src;
+}
+
+/* HOME */
+function getGreeting(){
+  var h=new Date().getHours();
+  if(h<12) return{g:'Good Morning',t:'Rise and claim your day, my queen.'};
+  if(h<17) return{g:'Good Afternoon',t:'The realm is yours to conquer.'};
+  return{g:'Good Evening',t:'Your ritual awaits, my queen.'};
+}
+function renderHome(){
+  var now=new Date(),gd=getGreeting();
+  document.getElementById('home-greeting').textContent=gd.g;
+  document.getElementById('home-tagline').textContent=gd.t;
+  document.getElementById('home-date').textContent=
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('streak-num').textContent=calcStreak();
+  applyMode();
+}
+function openHome(){
+  load();renderHome();
+  showEl('home');hideEl('routine');hideEl('victory');
+  startQuoteCycle();
+}
+
+/* ROUTINE */
+function openRoutine(){
+  stopQuoteCycle();load();
+  hideEl('home');showEl('routine');hideEl('victory');
+  renderRoutine();
+}
+function renderRoutine(){
+  var now=new Date(),h=now.getHours();
+  document.getElementById('routine-title').textContent=
+    h<12?'\u2736 Morning Ritual \u2736':h<17?'\u2736 Afternoon Ritual \u2736':'\u2736 Evening Ritual \u2736';
+  document.getElementById('routine-sub').textContent=
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  renderWeekStrip();renderProgress();renderSteps();renderEmojiGrid();
+}
+function renderWeekStrip(){
+  var today=new Date(),dow=today.getDay(),h='';
+  for(var i=0;i<7;i++){
+    var d=new Date(today);d.setDate(today.getDate()-dow+i);
+    var k=d.toISOString().split('T')[0];
+    var isT=i===dow,isD=!!completedDates[k];
+    h+='<div class="wd'+(isT?' today':'')+(isD?' wdone':'')+'">'+
+      '<span class="wd-l">'+DAY_LABELS[i]+'</span>'+
+      '<span class="wd-n">'+d.getDate()+'</span>'+
+      (isD?'<div class="wd-dot"></div>':'')+
+    '</div>';
+  }
+  document.getElementById('week-strip').innerHTML=h;
+}
+function renderProgress(){
+  var total=steps.length,done=steps.filter(function(s){return checked[s.id];}).length;
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('prog-ct').textContent=done+' / '+total;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  var all=total>0&&done===total;
+  document.getElementById('complete-banner-wrap').style.display=all?'block':'none';
+  if(all){completedDates[getTodayKey()]=true;save();}
+}
+
+/* STEPS */
+function renderSteps(){
+  var html='';
+  steps.forEach(function(step){
+    var isDone=!!checked[step.id];
+    if(step.type==='workout'){
+      html+=renderWorkoutCard(step,isDone);
+    } else {
+      html+='<div class="step-card tappable'+(isDone?' done':'')+'" onclick="toggleStep(\''+step.id+'\')">'+
+        '<div class="step-icon">'+step.icon+'</div>'+
+        '<div class="step-body">'+
+          '<div class="step-name">'+step.name+'</div>'+
+          '<div class="step-note">'+(step.note||'')+'</div>'+
+        '</div>'+
+        '<div class="check-ring">'+(isDone?'\u2713':'')+'</div>'+
+        '<button class="del-btn" onclick="event.stopPropagation();removeStep(\''+step.id+'\')">&#215;</button>'+
+      '</div>';
+    }
+  });
+  document.getElementById('steps-list').innerHTML=html;
+}
+
+function renderWorkoutCard(step,isDone){
+  var wo=WORKOUT_DAYS[workoutDay];
+  var selIdx=selectedVideo[workoutDay]!==undefined?selectedVideo[workoutDay]:-1;
+  var selUrl=selIdx>=0?wo.videos[selIdx].url:null;
+
+  var pillsHtml=WORKOUT_DAYS.map(function(d,i){
+    return '<button class="day-pill'+(i===workoutDay?' active':'')+'" onclick="setWorkoutDay('+i+')">'+d.label+'</button>';
+  }).join('');
+
+  var videosHtml=wo.videos.map(function(v,i){
+    return '<div class="yt-option'+(selIdx===i?' selected':'')+'" onclick="selectVideo('+workoutDay+','+i+')">'+
+      '<div class="yt-radio"><div class="yt-radio-dot"></div></div>'+
+      '<div class="yt-info">'+
+        '<div class="yt-title">'+v.title+'</div>'+
+        '<div class="yt-meta">'+v.channel+' &middot; '+v.duration+'</div>'+
+      '</div>'+
+      '<div class="yt-play-icon">&#9654;</div>'+
+    '</div>';
+  }).join('');
+
+  var watchCls=selUrl?'watch-btn':'watch-btn disabled';
+  var watchOnClick=selUrl?'onclick="openVideo(\''+selUrl+'\')"':'';
+
+  return '<div class="step-card'+(isDone?' done':'')+'">'+
+    '<div class="step-icon">'+step.icon+'</div>'+
+    '<div class="step-body">'+
+      '<div class="step-name">'+step.name+'</div>'+
+      '<div class="step-note">'+(step.note||'')+'</div>'+
+      '<div class="workout-expand">'+
+        '<div class="wo-section-label">Select Training Day</div>'+
+        '<div class="day-pills">'+pillsHtml+'</div>'+
+        '<div class="workout-focus">'+wo.focus+'</div>'+
+        '<div class="wo-select-label">Select a Workout</div>'+
+        '<div class="yt-options">'+videosHtml+'</div>'+
+        ''+
+        (wo.coreRoutine ?
+        '<div class="wo-section-label" style="margin-top:8px;">Core Ritual — Every 3rd Day</div>'+
+        '<div class="yt-option selected" onclick="openVideo(\''+wo.coreRoutine.url+'\')">'+
+          '<div class="yt-radio"><div class="yt-radio-dot" style="opacity:1"></div></div>'+
+          '<div class="yt-info">'+
+            '<div class="yt-title">'+wo.coreRoutine.title+'</div>'+
+            '<div class="yt-meta">'+wo.coreRoutine.channel+' · '+wo.coreRoutine.duration+'</div>'+
+          '</div>'+
+          '<div class="yt-play-icon">🔥</div>'+
+        '</div>' : ''
+        )+
+        '<div class="sticky-mobile-actions">'+
+        '<div class="yt-options">'+
+        wo.absBonus.map(function(v){
+          return '<div class="yt-option" onclick="openVideo(\''+v.url+'\')">'+
+            '<div class="yt-radio"></div>'+
+            '<div class="yt-info">'+
+              '<div class="yt-title">'+v.title+'</div>'+
+              '<div class="yt-meta">'+v.channel+' &middot; '+v.duration+'</div>'+
+            '</div>'+
+            '<div class="yt-play-icon">🔥</div>'+
+          '</div>';
+        }).join('')+
+        '</div>'+
+        '<div class="wo-action-row">'+
+          '<button class="'+watchCls+'" '+watchOnClick+(selUrl?'':' disabled')+'>&#9654; Watch on YouTube</button>'+
+          '<button class="mark-wo-btn'+(isDone?' done':'')+'" onclick="toggleStep(\''+step.id+'\')">'+
+            (isDone?'\u2736 Workout complete \u2014 well done, queen':'Mark workout as complete')+
+          '</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<button class="del-btn" onclick="removeStep(\''+step.id+'\')">&#215;</button>'+
+  '</div>';
+}
+
+function openVideo(url){
+  window.open(url,'_blank','noopener,noreferrer');
+}
+function selectVideo(dayIdx,vidIdx){
+  selectedVideo[dayIdx]=vidIdx;
+  save();renderSteps();
+}
+
+function renderEmojiGrid(){
+  document.getElementById('emoji-grid').innerHTML=
+    EMOJIS.map(function(e){
+      return '<div class="emoji-opt'+(e===selectedEmoji?' sel':'')+'" onclick="selectEmoji(\''+e+'\')">'+e+'</div>';
+    }).join('');
+}
+
+/* VICTORY */
+function openVictory(){
+  spawnParticles();
+  load();
+  document.getElementById('vic-streak').textContent=calcStreak();
+  var done=steps.filter(function(s){return checked[s.id];}).length;
+  document.getElementById('vic-steps').textContent=done+'/'+steps.length;
+  var q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('vic-qt').textContent='\u201c'+q.text+'\u201d';
+  document.getElementById('vic-qs').textContent='\u2014 '+q.src;
+  document.getElementById('vic-msg').textContent=VICTORY_MSGS[Math.floor(Math.random()*VICTORY_MSGS.length)];
+  hideEl('routine');showEl('victory');
+}
+function spawnParticles(){
+  var colors=['#D4A843','#B5435F','#EDE5CF','#7B4FA0','#E8C878'];
+  var cx=innerWidth/2,cy=innerHeight/2;
+  for(var i=0;i<28;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    var a=Math.random()*Math.PI*2,dist=90+Math.random()*180;
+    p.style.cssText='left:'+cx+'px;top:'+cy+'px;background:'+colors[i%colors.length]+';'+
+      '--tx:'+Math.round(Math.cos(a)*dist)+'px;--ty:'+Math.round(Math.sin(a)*dist)+'px;'+
+      'animation-duration:'+(0.7+Math.random()*0.5)+'s;';
+    document.body.appendChild(p);
+    (function(el){setTimeout(function(){el.remove();},1300);})(p);
+  }
+}
+
+/* INTERACTIONS */
+function toggleStep(id){
+  checked[id]=!checked[id];
+  save();renderSteps();renderProgress();renderWeekStrip();
+}
+function setWorkoutDay(i){
+  workoutDay=i;save();renderSteps();
+}
+function removeStep(id){
+  if(!confirm('Remove this step from your ritual?'))return;
+  steps=steps.filter(function(s){return s.id!==id;});
+  delete checked[id];save();renderSteps();renderProgress();
+}
+function confirmReset(){
+  if(!confirm('Reset all of today\'s steps?'))return;
+  checked={};save();renderSteps();renderProgress();renderWeekStrip();
+}
+function toggleAddForm(){
+  addFormOpen=!addFormOpen;
+  document.getElementById('add-form').classList.toggle('open',addFormOpen);
+  document.getElementById('add-toggle').textContent=addFormOpen?'\u2715 Cancel':'+ Add a step to your ritual';
+  if(addFormOpen) document.getElementById('new-step-name').focus();
+}
+function closeAddForm(){
+  addFormOpen=false;
+  document.getElementById('add-form').classList.remove('open');
+  document.getElementById('add-toggle').textContent='+ Add a step to your ritual';
+  document.getElementById('new-step-name').value='';
+}
+function selectEmoji(e){selectedEmoji=e;renderEmojiGrid();}
+function saveNewStep(){
+  var name=document.getElementById('new-step-name').value.trim();
+  if(!name){document.getElementById('new-step-name').focus();return;}
+  steps.push({id:'custom_'+Date.now(),icon:selectedEmoji,name:name,note:'',custom:true});
+  save();closeAddForm();renderSteps();renderProgress();
+  document.getElementById('new-step-name').value='';
+}
+
+/* UTILS */
+function showEl(id){document.getElementById(id).classList.remove('hidden');}
+function hideEl(id){document.getElementById(id).classList.add('hidden');}
+
+/* INIT */
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('new-step-name').addEventListener('keydown',function(e){if(e.key==='Enter')saveNewStep();});
+});
+load();applyMode();renderHome();startQuoteCycle();
+</script>
+</body>
+</html>
